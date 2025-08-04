@@ -37,7 +37,9 @@ load_dotenv()
 app=Flask(__name__)
 DATABASE_URL = os.getenv("DATABASE_URL")
 PORT = os.getenv("PORT", "8080")
+print("Connecting to DB")
 connection = psycopg2.connect(DATABASE_URL)
+print("connected to db")
 
 
 
@@ -124,4 +126,5 @@ def temps_data():
 
 if __name__ == "__main__":
     app.run(debug=True, port=PORT)
+
 

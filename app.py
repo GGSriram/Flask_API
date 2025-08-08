@@ -157,7 +157,26 @@ CREATE TABLE IF NOT EXISTS users (
 
 @app.route("/")
 def home():
-    return "Hello world"
+        return jsonify({
+        "UPLOAD SENSOR DATA API": {"url": "/api/demo/upload", "method": "POST"},
+        "GET ALL SENSOR TABLE DATA": {"url": "/all-data", "method": "GET"},
+        "GET LATEST SENSOR DATA FOR DEVICE": {"url": "/api/demo/latest/<device_id>", "method": "GET"},
+        "IRRIGATION TRIGGER LOGIC": {"url": "/api/irrigation/trigger", "method": "POST"},
+        "MARKET PRICE API": {"url": "/api/market/prices", "method": "GET"},
+        "HISTORICAL CROP DATA API": {"url": "/api/crop/history", "method": "GET"},
+        "GET CROP HISTORY BY ID": {"url": "/api/crop/history/<int:id>", "method": "GET"},
+        "GET CROP HISTORY BY DEVICE_ID": {"url": "/api/crop/history/device/<device_id>", "method": "GET"},
+        "ALERT SUMMARY": {"url": "/api/alerts/summary", "method": "GET"},
+        "SUBADMIN LIST & CREATE": {"url": "/api/admin/subadmins", "method": "GET, POST"},
+        "SUBADMIN GET/UPDATE/DELETE": {"url": "/api/admin/subadmins/<int:id>", "method": "GET, PUT, DELETE"},
+        "VENDOR CLIENTS LIST & CREATE": {"url": "/api/vendor/clients", "method": "GET, POST"},
+        "VENDOR CLIENT GET/UPDATE/DELETE": {"url": "/api/vendor/clients/<int:id>", "method": "GET, PUT, DELETE"},
+        "USER REGISTER": {"url": "/api/auth/register", "method": "POST"},
+        "USER LOGIN": {"url": "/api/auth/login", "method": "POST"},
+        "USER LOGOUT": {"url": "/api/auth/logout", "method": "POST"},
+        "GET PROFILE": {"url": "/api/profile", "method": "GET"},
+        "ADMIN DASHBOARD": {"url": "/api/admin/dashboard", "method": "GET"}
+    })
 
 
 #     UPLOAD SENSOR DATA API    
@@ -698,3 +717,4 @@ def admin_dashboard():
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
+

@@ -651,7 +651,7 @@ def login():
             user = cursor.fetchone()
 
             if user and check_password_hash(user[2], password):
-                # ✅ Store only user ID as string in JWT
+                #  Store only user ID as string in JWT
                 access_token = create_access_token(identity=str(user[0]))
                 return {
                     "message": "Login successful",
@@ -717,4 +717,5 @@ def admin_dashboard():
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
+
 

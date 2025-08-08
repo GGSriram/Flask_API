@@ -1,3 +1,5 @@
-flask
+Flask
 psycopg2-binary
-dotenv 
+dotenv
+flask-jwt-extended
+werkzeug

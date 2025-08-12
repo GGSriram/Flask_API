@@ -1,9 +1,3 @@
-# add the history of the crop product
-
-
-
-#      IMPORT MODULES      
-
 import os
 import psycopg2
 from flask import Flask, request, jsonify
@@ -157,7 +151,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 @app.route("/")
 def home():
-        return jsonify({
+    return jsonify({
         "UPLOAD SENSOR DATA API": {"url": "/api/demo/upload", "method": "POST"},
         "GET ALL SENSOR TABLE DATA": {"url": "/all-data", "method": "GET"},
         "GET LATEST SENSOR DATA FOR DEVICE": {"url": "/api/demo/latest/<device_id>", "method": "GET"},
@@ -512,7 +506,7 @@ def handle_subadmin_by_id(id):
                 role = data.get("role")
                 phone = data.get("phone")
 
-                if not name or not email or not role:
+                if not name or not email or not role or not phone:
                     return {"error": "All fields (name, email, role, phone) are required."}, 400
 
                 cursor.execute(UPDATE_SUBADMIN, (name, email, role, phone, id))
@@ -538,8 +532,8 @@ def manage_vendor_clients():
                 phone = data.get("phone")
                 address = data.get("address")
 
-                if not name or not email:
-                    return {"error": "Name and email are required"}, 400
+                if not name or not email or not phone or not address:
+                    return {"error": "All fields (name, email, phone, address) are required."}, 400
 
                 try:
                     cursor.execute(INSERT_VENDOR_CLIENT_RETURN_ID, (name, email, phone, address))
@@ -712,10 +706,47 @@ def admin_dashboard():
             return {"message": f"Welcome Admin {username}"}, 200
 
 
+@app.get("/api/ventor/dashboard")
+@jwt_required()
+def ventor_dashboard():
+    user_id = get_jwt_identity()
+
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT username, role FROM users WHERE id = %s;", (user_id,))
+            user = cursor.fetchone()
+
+            if not user:
+                return {"error": "User not found"}, 404
+
+            username, role = user
+            if role != "ventor":
+                return {"error": "Access denied: ventors only"}, 403
+
+            return {"message": f"Welcome ventor {username}"}, 200
+
+
+@app.get("/api/users/dashboard")
+@jwt_required()
+def users_dashboard():
+    user_id = get_jwt_identity()
+
+    with connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT username, role FROM users WHERE id = %s;", (user_id,))
+            user = cursor.fetchone()
+
+            if not user:
+                return {"error": "User not found"}, 404
+
+            username, role = user
+            if role != "user":
+                return {"error": "Access denied: user only"}, 403
+
+            return {"message": f"Welcome user {username}"}, 200
+
 
 # RUN THE SERVER       
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True)
-
-
